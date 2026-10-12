@@ -1,0 +1,14 @@
+node_modules/
+uploads/*
+!uploads/.gitkeep
+logs/
+*.log
+.env
+.env.local
+.DS_Store
+ip-lists.json
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Memory Rain</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Admin Login Screen -->
+  <div id="adminLoginScreen" class="admin-login-screen">
+    <div class="admin-login-container">
+      <div class="admin-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+      <h1 class="admin-login-title">Admin Panel</h1>
+      <p class="admin-login-subtitle">Memory Rain Administration</p>
+      <form id="adminLoginForm" class="admin-login-form">
+        <input
+          type="password"
+          id="adminPasswordInput"
+          class="admin-login-input"
+          placeholder="Admin Password"
+          autocomplete="off"
+        >
+        <button type="submit" class="admin-login-btn">
+          <span>Access Admin Panel</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </form>
+      <div id="adminLoginError" class="admin-login-error"></div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+    <header class="admin-header">
+      <h1 class="admin-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Admin Panel
+      </h1>
+      <button class="admin-logout-btn" id="adminLogoutBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+        </svg>
+        Logout
+      </button>
+    </header>
+
+    <div class="admin-content">
+      <!-- Navigation Tabs -->
+      <nav class="admin-nav">
+        <button class="admin-nav-btn active" data-tab="overview">Overview</button>
+        <button class="admin-nav-btn" data-tab="logs">Logs</button>
+        <button class="admin-nav-btn" data-tab="settings">Settings</button>
+      </nav>
+
+      <!-- Overview Tab -->
+      <div id="overviewTab" class="admin-tab active">
+        <h2 class="admin-section-title">System Overview</h2>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Active Sessions</div>
+              <div class="stat-value" id="statActiveSessions">-</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Total Uploads</div>
+              <div class="stat-value" id="statTotalUploads">-</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Auth Attempts (24h)</div>
+              <div class="stat-value" id="statAuthAttempts">-</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Uptime</div>
+              <div class="stat-value" id="statUptime">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <h3 class="admin-subsection-title">Recent Activity</h3>
+          <div class="activity-list" id="recentActivity">
+            <div class="activity-placeholder">Loading recent activity...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs Tab -->
+      <div id="logsTab" class="admin-tab">
+        <h2 class="admin-section-title">System Logs</h2>
+
+        <div class="logs-controls">
+          <div class="logs-filters">
+            <select id="logLevelFilter" class="logs-select">
+              <option value="">All Levels</option>
+              <option value="INFO">INFO</option>
+              <option value="WARN">WARN</option>
+              <option value="ERROR">ERROR</option>
+            </select>
+
+            <select id="logCategoryFilter" class="logs-select">
+              <option value="">All Categories</option>
+              <option value="AUTH">AUTH</option>
+              <option value="UPLOAD">UPLOAD</option>
+              <option value="ACCESS">ACCESS</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+
+            <input type="text" id="logSearchInput" class="logs-search" placeholder="Search logs...">
+          </div>
+
+          <button class="logs-refresh-btn" id="refreshLogsBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 4v6h6M23 20v-6h-6"/>
+              <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/>
+            </svg>
+            Refresh
+          </button>
+        </div>
+
+        <div class="logs-container" id="logsContainer">
+          <div class="logs-placeholder">Loading logs...</div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settingsTab" class="admin-tab">
+        <h2 class="admin-section-title">Settings</h2>
+
+        <div class="settings-section">
+          <h3 class="admin-subsection-title">User Access Control</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label">Change User Password</div>
+              <div class="setting-description">Update the password for user access to Memory Rain</div>
+            </div>
+            <button class="setting-btn" id="changeUserPasswordBtn">Change Password</button>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label">Clear All Sessions</div>
+              <div class="setting-description">Force logout all active user sessions</div>
+            </div>
+            <button class="setting-btn warning" id="clearSessionsBtn">Clear Sessions</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="admin-subsection-title">Admin Security</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label">Change Admin Password</div>
+              <div class="setting-description">Update your admin panel password</div>
+            </div>
+            <button class="setting-btn" id="changeAdminPasswordBtn">Change Password</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="admin-subsection-title">System Maintenance</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label">Clear Logs</div>
+              <div class="setting-description">Remove old log entries (keeps last 7 days)</div>
+            </div>
+            <button class="setting-btn warning" id="clearLogsBtn">Clear Old Logs</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="admin-subsection-title">IP Access Control</h3>
+          <div class="ip-control-info">
+            <p class="ip-info-text">
+              <strong>How it works:</strong> Blacklisted IPs are always blocked. When whitelist is disabled, all IPs (except blacklisted) can access.
+              When whitelist is enabled, ONLY whitelisted IPs will be allowed access.
+            </p>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-label">
+                Whitelist Mode: <span id="whitelistStatus" class="status-badge">Disabled</span>
+              </div>
+              <div class="setting-description">
+                Enable to restrict access to only whitelisted IPs. Disable to allow all IPs (except blacklisted).
+              </div>
+            </div>
+            <button class="setting-btn" id="toggleWhitelistBtn">Enable Whitelist</button>
+          </div>
+
+          <div class="ip-section">
+            <h4 class="ip-section-title">Whitelist (Allowed IPs)</h4>
+            <div class="ip-input-group">
+              <input type="text" id="whitelistInput" class="ip-input" placeholder="Enter IP address (e.g., 192.168.1.100)">
+              <button class="ip-add-btn" id="addWhitelistBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add
+              </button>
+            </div>
+            <div class="ip-list" id="whitelistContainer">
+              <div class="ip-list-placeholder">No whitelisted IPs</div>
+            </div>
+          </div>
+
+          <div class="ip-section">
+            <h4 class="ip-section-title">Blacklist (Blocked IPs)</h4>
+            <div class="ip-input-group">
+              <input type="text" id="blacklistInput" class="ip-input" placeholder="Enter IP address (e.g., 192.168.1.100)">
+              <button class="ip-add-btn" id="addBlacklistBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add
+              </button>
+            </div>
+            <div class="ip-list" id="blacklistContainer">
+              <div class="ip-list-placeholder">No blacklisted IPs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for password changes -->
+  <div id="passwordModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="closePasswordModal">&times;</button>
+      <h2 class="modal-title" id="passwordModalTitle">Change Password</h2>
+      <form id="passwordChangeForm" class="password-form">
+        <input type="password" id="newPasswordInput" class="modal-input" placeholder="New Password" required>
+        <input type="password" id="confirmPasswordInput" class="modal-input" placeholder="Confirm Password" required>
+        <div id="passwordError" class="modal-error"></div>
+        <button type="submit" class="modal-submit-btn">Update Password</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
